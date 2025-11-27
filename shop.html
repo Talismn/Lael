@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop | LEAL JEWELS NIGERIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #b76e79; --primary-dark: #a05260; --bg: #f8f6f3; --white: #ffffff;
+            --text: #222; --border: #e5e3df; --shadow: rgba(183,110,121,.08); --shadow-hover: rgba(183,110,121,.13);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { background:var(--bg); font-family:'Montserrat',sans-serif; color:var(--text); line-height:1.7; overflow-x:hidden; }
+
+        /* Header + Hamburger */
+        .main-header {
+            background:var(--white); display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 4vw; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000;
+        }
+        .logo { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; letter-spacing:1px; color:var(--text); }
+        .nav-links { display:flex; gap:4rem; align-items:center; }
+        .nav-link { color:var(--text); text-decoration:none; font-weight:500; transition:.2s; font-size:1rem; }
+        .nav-link:hover { color:var(--primary); }
+        .hamburger { display:none; flex-direction:column; cursor:pointer; gap:5px; }
+        .hamburger span { width:28px; height:3px; background:#222; transition:.3s; }
+
+        .hero {
+            height:320px; background:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),
+            url('https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?auto=format&fit=crop&w=1350&q=80') center/cover;
+            display:flex; align-items:flex-end; justify-content:center;
+        }
+        .hero h1 {
+            background:rgba(255,255,255,.9); padding:1.8rem 3rem; border-radius:18px 18px 0 0;
+            font-family:'Playfair Display',serif; font-size:2.4rem; box-shadow:0 4px 24px var(--shadow);
+        }
+
+        .shop-container { max-width:1200px; margin:3rem auto; padding:0 2vw; }
+
+        .filters { display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; justify-content:center; }
+        .filter-btn { background:var(--white); color:var(--text); border:1.5px solid var(--border); padding:0.7rem 1.5rem; border-radius:8px; font-weight:500; cursor:pointer; transition:.2s; box-shadow:0 2px 8px var(--shadow); }
+        .filter-btn.active, .filter-btn:hover { background:var(--primary); color:white; border-color:var(--primary); box-shadow:0 4px 16px var(--shadow-hover); }
+
+        .product-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:2rem; }
+        .product-card { background:var(--white); border-radius:18px; overflow:hidden; box-shadow:0 4px 24px var(--shadow); border:1.5px solid var(--border); transition:.2s; display:flex; flex-direction:column; }
+        .product-card:hover { transform:translateY(-8px) scale(1.03); box-shadow:0 8px 32px var(--shadow-hover); }
+        .product-img { width:100%; height:200px; object-fit:cover; }
+        .product-info { padding:1.2rem; flex:1; display:flex; flex-direction:column; }
+        .product-name { font-weight:600; font-size:1.1rem; margin-bottom:0.5rem; }
+        .product-price { color:var(--primary); font-weight:700; font-size:1.1rem; margin-bottom:1rem; }
+        .add-to-cart { background:var(--primary); color:white; border:none; padding:0.7rem; border-radius:8px; font-weight:500; cursor:pointer; margin-top:auto; transition:.2s; box-shadow:0 2px 8px var(--shadow); min-height:48px; }
+        .add-to-cart:hover { background:var(--primary-dark); transform:scale(1.05); box-shadow:0 4px 16px var(--shadow-hover); }
+
+        .cart-notification { position:fixed; top:20px; right:20px; background:var(--primary); color:white; padding:1rem 1.5rem; border-radius:8px; font-weight:500; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:10000; opacity:0; transform:translateY(-20px); transition:.3s; }
+        .cart-notification.show { opacity:1; transform:translateY(0); }
+
+        footer { background:var(--white); text-align:center; padding:2rem; border-top:1px solid var(--border); color:#666; font-size:0.9rem; margin-top:4rem; }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .nav-links { gap:3rem; }
+            .hero h1 { font-size:2rem; padding:1.5rem 2.5rem; }
+        }
+        @media (max-width: 768px) {
+            .hamburger { display:flex; }
+            .nav-links { position:absolute; top:100%; left:0; width:100%; background:var(--white); flex-direction:column; gap:0; padding:1rem 4vw; border-bottom:1px solid var(--border); display:none; }
+            .nav-links.active { display:flex; }
+            .nav-link { padding:1rem 0; font-size:1.1rem; border-bottom:1px solid #f0f0f0; }
+            .logo { font-size:1.8rem; }
+
+            .hero { height:50vh; min-height:300px; }
+            .hero h1 { font-size:1.8rem; padding:1.5rem 2rem; }
+
+            .product-grid { grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+            .product-img { height:180px; }
+        }
+        @media (max-width: 480px) {
+            .logo { font-size:1.5rem; }
+            .hero { height:40vh; min-height:250px; }
+            .hero h1 { font-size:1.5rem; padding:1.2rem 1.8rem; }
+            .filters { overflow-x:auto; padding-bottom:0.5rem; justify-content:flex-start; }
+            .filter-btn { white-space:nowrap; }
+            .product-grid { gap:1.5rem; }
+        }
+        .hamburger.active span:nth-child(1) { transform:rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity:0; }
+        .hamburger.active span:nth-child(3) { transform:rotate(45deg) translate(-5px, -6px); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">LEAL JEWELS NIGERIA</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="Build.html" class="nav-link">Build Your Bracelet</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="Contact.html" class="nav-link">Contact</a>
+            <a href="cart.html" class="nav-link cart-icon">Cart <span class="cart-count" id="cartCount"></span></a>
+        </nav>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </header>
+
+    <section class="hero">
+        <h1>Shop Our Collection</h1>
+        <div class="search-bar" style="margin-bottom:1.5rem; text-align:center;">
+            <input type="text" id="searchInput" placeholder="Search jewelry..." style="width:100%; max-width:500px; padding:0.8rem 1rem; border:1.5px solid var(--border); border-radius:8px; font-size:1rem; background:var(--bg);">
+        </div>
+    </section>
+
+    <section class="shop-container">
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="bracelet">Bracelets</button>
+            <button class="filter-btn" data-filter="ring">Rings</button>
+            <button class="filter-btn" data-filter="necklace">Necklaces</button>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <!-- Products loaded by JS -->
+        </div>
+    </section>
+
+    <div class="cart-notification" id="cartNotification">Added to cart!</div>
+
+    <footer>© 2025 LEAL JEWELS NIGERIA. All rights reserved.</footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('hamburger').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        const products = [
+            {id:1, name:"Rose Quartz Charm Bracelet", price:85, category:"bracelet", img:"https://images.unsplash.com/photo-1611590027211-b954fd027b51?w=600"},
+            {id:2, name:"Gold Beaded Bracelet", price:120, category:"bracelet", img:"https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?w=600"},
+            {id:3, name:"Evil Eye Protection Bracelet", price:65, category:"bracelet", img:"https://images.unsplash.com/photo-1571771019784-3ff35f4f1ab8?w=600"},
+            {id:4, name:"Silver Chain Bracelet", price:95, category:"bracelet", img:"https://images.unsplash.com/photo-1608042314453-ae19580b99ad?w=600"},
+
+            {id:5, name:"Diamond Solitaire Ring", price:350, category:"ring", img:"https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?w=600"},
+            {id:6, name:"Rose Gold Band", price:180, category:"ring", img:"https://images.unsplash.com/photo-1611590027211-b954fd027b51?w=600"},
+            {id:7, name:"Sapphire Eternity Ring", price:420, category:"ring", img:"https://images.unsplash.com/photo-1631055373751-1ad9a1c2c765?w=600"},
+            {id:8, name:"Minimalist Silver Ring", price:75, category:"ring", img:"https://images.unsplash.com/photo-1608042314453-ae19580b99ad?w=600"},
+
+            {id:9, name:"Pearl Strand Necklace", price:150, category:"necklace", img:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600"},
+            {id:10, name:"Gold Pendant Necklace", price:210, category:"necklace", img:"https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?w=600"},
+            {id:11, name:"Heart Locket Necklace", price:135, category:"necklace", img:"https://images.unsplash.com/photo-1581092580496-e0d23cbdf1dc?w=600"},
+            {id:12, name:"Layered Chain Necklace", price:98, category:"necklace", img:"https://images.unsplash.com/photo-1608042314453-ae19580b99ad?w=600"}
+        ];
+
+        const grid = document.getElementById('productGrid');
+        const filters = document.querySelectorAll('.filter-btn');
+        const notification = document.getElementById('cartNotification');
+
+        function renderProducts(filter = 'all') {
+            grid.innerHTML = '';
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.dataset.category = p.category;
+                card.innerHTML = `
+                    <img src="${p.img}" alt="${p.name}" class="product-img">
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">$${p.price}.00</div>
+                        <button class="add-to-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        filters.forEach(btn => {
+            btn.onclick = () => {
+                filters.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProducts(btn.dataset.filter);
+            };
+        });
+
+        window.addToCart = function(id) {
+            const product = products.find(p => p.id === id);
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(item => item.id === id);
+            if (existing) existing.qty += 1;
+            else cart.push({ ...product, qty: 1 });
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 2000);
+        };
+
+        renderProducts();
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                const name = card.querySelector('.product-name').textContent.toLowerCase();
+                card.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

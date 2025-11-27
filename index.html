@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LEAL JEWELS NIGERIA</title>
+    <!-- Optimized viewport for Darry Ring-style scaling: fluid, no zoom, touch-friendly -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base resets & your original styles – preserved exactly */
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            box-sizing: border-box; 
+        }
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+        }
+        img { 
+            max-width: 100%; 
+            height: auto; 
+            display: block; 
+        }
+        body {
+            background: #f8f6f3;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #222;
+            -webkit-text-size-adjust: 100%;
+        }
+        /* Header – your original, with mobile hamburger like Darry Ring */
+        .main-header {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 4vw;
+            border-bottom: 1px solid #e5e3df;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #222;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6rem;
+            margin-left: 4rem;
+        }
+        .nav-link {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1rem;
+            color: #222;
+            text-decoration: none;
+            letter-spacing: 1px;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem 0;
+        }
+        .nav-link:hover, .nav-link:focus {
+            color: #b76e79;
+        }
+        /* Hamburger for mobile – hidden on desktop, elegant slide like Darry Ring */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #222;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        /* Subheader for Profile – scaled fluidly */
+        .subheader-profile {
+            width: 100%;
+            background: #fff;
+            border-bottom: 1px solid #e5e3df;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0.7rem 4vw;
+            margin-bottom: 0.5rem;
+        }
+        .profile-link {
+            display: flex;
+            align-items: center;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1rem;
+            color: #222;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .profile-link:hover, .profile-link:focus {
+            color: #b76e79;
+        }
+        .profile-link svg {
+            display: block;
+        }
+        /* Hero – auto-height scaling like Darry Ring, with fluid text */
+        .hero {
+            width: 100vw;
+            max-width: 100%;
+            height: 420px;
+            background: url('hero-image.jpg') center center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+        }
+        .hero-text {
+            background: rgba(255,255,255,0.85);
+            padding: 2rem 3rem;
+            border-radius: 18px 18px 0 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 0;
+            box-shadow: 0 4px 24px rgba(183, 110, 121, 0.08);
+        }
+        /* Product Grid – fluid columns (4→2→1) like Darry Ring, proportional scaling */
+        .product-section {
+            max-width: 1200px;
+            margin: 3rem auto 2rem auto;
+            padding: 0 2vw;
+        }
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(183, 110, 121, 0.08);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+            border: 1.5px solid #e5e3df;
+        }
+        .product-card:hover {
+            box-shadow: 0 8px 32px rgba(183, 110, 121, 0.13);
+            transform: translateY(-8px) scale(1.03);
+        }
+        .product-img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .product-name {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1.1rem;
+            color: #222;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .product-price {
+            font-size: 1rem;
+            color: #b76e79;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .product-btn {
+            background: #b76e79; /* Fixed your 'liée' typo */
+            color: #fff8f0;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 2rem;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(183, 110, 121, 0.10);
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            min-height: 44px; /* Darry Ring touch target minimum */
+        }
+        .product-btn:hover, .product-btn:focus {
+            transform: scale(1.08);
+            box-shadow: 0 4px 16px rgba(183, 110, 121, 0.18);
+            background: #a05260;
+        }
+        /* Profile Modal – your original, with mobile centering */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.25);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-modal.active {
+            display: flex;
+        }
+        .profile-modal-content {
+            background: #fff;
+            border-radius: 18px;
+            padding: 2.5rem 2rem 2rem 2rem;
+            box-shadow: 0 8px 32px rgba(183, 110, 121, 0.13);
+            min-width: 320px;
+            position: relative;
+            text-align: center;
+            max-width: 90vw;
+        }
+        .close-profile-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #b76e79;
+            cursor: pointer;
+        }
+        .profile-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .profile-option-btn {
+            background: #b76e79;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            text-decoration: none;
+            text-align: center;
+            min-height: 44px;
+        }
+        .profile-option-btn:hover, .profile-option-btn:focus {
+            transform: scale(1.05);
+            background: #a05260;
+        }
+        /* Footer – your original, fluid */
+        .footer {
+            background: #fff; /* Assumed based on your code; adjust if needed */
+            border-top: 1px solid #e5e3df;
+            text-align: center;
+            padding: 2rem 4vw;
+        }
+        .footer-content p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* DARRY RING-STYLE MOBILE SCALING: Fluid, elegant breakpoints – no distortion */
+        /* Large tablets & small desktops */
+        @media (max-width: 1024px) {
+            .nav-links { gap: 3rem; }
+            .main-header { padding: 1.2rem 3vw; }
+            .hero-text { font-size: 1.8rem; padding: 1.8rem 2.5rem; }
+            .product-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+        }
+
+        /* Phones & small tablets – 2 columns, hamburger nav, scaled hero */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #fff;
+                flex-direction: column;
+                gap: 0;
+                padding: 1rem 4vw;
+                border-bottom: 1px solid #e5e3df;
+                margin-left: 0;
+            }
+            .nav-links.active { display: flex; }
+            .nav-link { padding: 0.8rem 0; font-size: 1.1rem; border-bottom: 1px solid #f0f0f0; }
+            .logo { font-size: 1.8rem; }
+            .hero { 
+                height: 50vh; /* Fluid like Darry Ring */
+                min-height: 300px;
+            }
+            .hero-text { 
+                font-size: 1.6rem; 
+                padding: 1.5rem 2rem; 
+                max-width: 90%;
+                text-align: center;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2-column luxury grid */
+                gap: 1.2rem;
+            }
+            .product-card { padding: 1.2rem 0.8rem; }
+            .product-img { width: 120px; height: 120px; }
+            .product-name { font-size: 1rem; }
+            .product-title { font-size: 1.8rem; text-align: center; }
+            .subheader-profile { padding: 0.5rem 4vw; justify-content: center; }
+            .profile-link { font-size: 0.9rem; }
+        }
+
+        /* Small phones – 1 column for ultimate readability */
+        @media (max-width: 480px) {
+            .logo { font-size: 1.5rem; }
+            .hero { height: 40vh; min-height: 250px; }
+            .hero-text { 
+                font-size: 1.4rem; 
+                padding: 1rem 1.5rem; 
+            }
+            .product-grid {
+                grid-template-columns: 1fr; /* Single column for tiny screens */
+                gap: 1rem;
+                max-width: 350px;
+                margin: 0 auto;
+            }
+            .product-card { padding: 1rem; }
+            .product-img { width: 140px; height: 140px; margin: 0 auto; }
+            .product-btn, .profile-option-btn { 
+                width: 100%; 
+                padding: 1rem; 
+                font-size: 1.1rem; 
+            }
+            .product-title { font-size: 1.6rem; }
+            .profile-modal-content { padding: 2rem 1.5rem; margin: 1rem; }
+        }
+
+        /* Hamburger animation – subtle elegance */
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation – with hamburger for mobile -->
+    <header class="main-header">
+        <div class="logo">LEAL JEWELS NIGERIA</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="#" class="nav-link">Collections</a>
+            <a href="Build.html" class="nav-link">Build Your Bracelet</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="Contact.html" class="nav-link">Contact</a>
+            <a href="cart.html" class="nav-link cart-icon">
+                Cart <span class="cart-count" id="cartCount"></span>
+            </a>
+        </nav>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Subheader for Profile Feature -->
+    <div class="subheader-profile">
+        <a href="#" class="profile-link nav-link" title="Profile">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;">
+                <circle cx="12" cy="8" r="4.5" stroke="#b76e79" stroke-width="1.5" fill="none"/>
+                <path d="M4.5 20c0-3.5 3.5-5.5 7.5-5.5s7.5 2 7.5 5.5" stroke="#b76e79" stroke-width="1.5" fill="none"/>
+            </svg>
+            <span style="margin-left:0.7rem;">Profile</span>
+        </a>
+    </div>
+
+    <!-- Profile Modal – unchanged -->
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-modal-content">
+            <button class="close-profile-modal" id="closeProfileModal">&times;</button>
+            <h2 style="font-family:'Playfair Display',serif;color:#b76e79;margin-bottom:1.5rem;">Profile</h2>
+            <div class="profile-options">
+                <button class="profile-option-btn" onclick="alert('Coming soon!')">My Profile</button>
+                <a href="signup.html" class="profile-option-btn">Sign Up</a>
+                <a href="login.html" class="profile-option-btn">Sign In</a>
+                <button class="profile-option-btn" onclick="alert('Your cart is empty')">My Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section – scaled fluidly -->
+    <section class="hero">
+        <div class="hero-text">Handcrafted Jewelry for Every Moment</div>
+    </section>
+
+    <!-- Product Grid Section – fluid columns -->
+    <section class="product-section">
+        <div class="product-title">Featured Products</div>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="product1.jpg" alt="Product 1" class="product-img">
+                <div class="product-name">Elegant Gold Ring</div>
+                <div class="product-price">$120.00</div>
+                <button class="product-btn">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="product2.jpg" alt="Product 2" class="product-img">
+                <div class="product-name">Silver Necklace</div>
+                <div class="product-price">$85.00</div>
+                <button class="product-btn">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="product3.jpg" alt="Product 3" class="product-img">
+                <div class="product-name">Diamond Stud Earrings</div>
+                <div class="product-price">$200.00</div>
+                <button class="product-btn">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="product4.jpg" alt="Product 4" class="product-img">
+                <div class="product-name">Pearl Bracelet</div>
+                <div class="product-price">$150.00</div>
+                <button class="product-btn">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer – added basic styling to match your code -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2023 LEAL JEWELS NIGERIA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Your JavaScript + hamburger toggle for mobile -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Profile modal – your original code
+            const profileLink = document.querySelector('.profile-link');
+            const profileModal = document.getElementById('profileModal');
+            const closeProfileModal = document.getElementById('closeProfileModal');
+
+            profileLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileModal.classList.add('active');
+            });
+
+            closeProfileModal.addEventListener('click', function() {
+                profileModal.classList.remove('active');
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === profileModal) {
+                    profileModal.classList.remove('active');
+                }
+            });
+
+            // Hamburger menu toggle – Darry Ring-inspired smooth slide
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // Close menu on link click (mobile UX)
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart | LEAL JEWELS NIGERIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --primary: #b76e79; --primary-dark: #a05260; --bg: #f8f6f3; --white: #ffffff;
+            --text: #222; --border: #e5e3df; --shadow: rgba(183,110,121,.08); --shadow-hover: rgba(183,110,121,.13);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { background:var(--bg); font-family:'Montserrat',sans-serif; color:var(--text); overflow-x:hidden; }
+
+        /* Header + Hamburger */
+        .main-header {
+            background:var(--white); display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 4vw; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000;
+        }
+        .logo { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; letter-spacing:1px; color:var(--text); }
+        .nav-links { display:flex; gap:4rem; align-items: center; }
+        .nav-link { color:var(--text); text-decoration:none; font-weight:500; transition:.2s; font-size:1rem; }
+        .nav-link:hover { color:var(--primary); }
+        .hamburger { display:none; flex-direction:column; cursor:pointer; gap:5px; }
+        .hamburger span { width:28px; height:3px; background:#222; transition:.3s; }
+
+        .hero { height:280px; background:linear-gradient(rgba(0,0,0,.1),rgba(0 наша,0,.1)),
+            url('https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?auto=format&fit=crop&w=1350&q=80') center/cover;
+            display:flex; align-items:flex-end; justify-content:center; }
+        .hero h1 { background:rgba(255,255,255,.9); padding:1.8rem 3rem; border-radius:18px 18px 0 0;
+            font-family:'Playfair Display',serif; font-size:2.2rem; box-shadow:0 4px 24px var(--shadow); text-align:center; }
+
+        .cart-container { max-width:1000px; margin:3rem auto; padding:0 2vw; }
+        .cart-items, .cart-summary {
+            background:var(--white); border-radius:18px; padding:2rem; margin-bottom:2rem;
+            box-shadow:0 4px 24px var(--shadow); border:1.5px solid var(--border);
+        }
+        .cart-item { display:flex; gap:1.5rem; padding:1.5rem 0; border-bottom:1px solid var(--border); align-items:center; }
+        .cart-item:last-child { border-bottom:none; }
+        .cart-item img { width:100px; height:100px; object-fit:cover; border-radius:14px; }
+        .cart-item-info { flex:1; }
+        .cart-item-name { font-weight:600; font-size:1.1rem; margin-bottom:0.4rem; }
+        .cart-item-price { color:var(--primary); font-weight:700; font-size:1.1rem; }
+        .quantity { display:flex; align-items:center; gap:0.8rem; margin-top:0.8rem; }
+        .quantity button { width:40px; height:40px; background:var(--white); border:1.8px solid var(--border);
+            border-radius:10px; font-size:1.3rem; cursor:pointer; transition:.2s; }
+        .quantity button:hover { background:var(--primary); color:white; border-color:var(--primary); }
+        .remove-btn { background:none; border:none; color:#e74c3c; cursor:pointer; font-size:1.6rem; padding:0.5rem; }
+
+        .summary-line { display:flex; justify-content:space-between; margin-bottom:1rem; font-size:1.1rem; }
+        .total { font-size:1.5rem; font-weight:700; color:var(--primary); }
+        .checkout-btn { width:100%; background:var(--primary); color:white; padding:1.1rem; margin-top:1.5rem;
+            border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:1.1rem;
+            box-shadow:0 4px 12px var(--shadow); transition:.3s; min-height:52px; }
+        .checkout-btn:hover { background:var(--primary-dark); transform:scale(1.04); }
+
+        .empty-cart { text-align:center; padding:4rem 2rem; font-size:1.3rem; color:#777; }
+        .empty-cart a { color:var(--primary); text-decoration:underline; }
+
+        footer { background:var(--white); text-align:center; padding:2.5rem; border-top:1px solid var(--border);
+            color:#666; font-size:0.9rem; margin-top:5rem; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hamburger { display:flex; }
+            .nav-links { position:absolute; top:100%; left:0; width:100%; background:var(--white);
+                flex-direction:column; gap:0; padding:1rem 4vw; border-bottom:1px solid var(--border); display:none; }
+            .nav-links.active { display:flex; }
+            .nav-link { padding:1rem 0; font-size:1.1rem; border-bottom:1px solid #f0f0f0; }
+            .logo { font-size:1.8rem; }
+            .hero { height:50vh; min-height:260px; }
+            .hero h1 { font-size:1.8rem; padding:1.5rem 2rem; }
+            .cart-item { flex-direction:column; text-align:center; }
+            .cart-item img { width:140px ür; height:140px; margin:0 auto; }
+            .quantity { justify-content:center; }
+        }
+        @media (max-width: 480px) {
+            .logo { font-size:1.5rem; }
+            .hero h1 { font-size:1.5rem; padding:1.2rem 1.6rem; }
+            .checkout-btn { padding:1.3rem; font-size:1.15rem; }
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-6px, 7px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-6px, -7px); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">LEAL JEWELS NIGERIA</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="Build.html" class="nav-link">Build</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="Contact.html" class="nav-link">Contact</a>
+            <a href="cart.html" class="nav-link cart-icon">Cart <span class="cart-count" id="cartCount">0</span></a>
+        </nav>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </header>
+
+    <section class="hero"><h1>Your Cart</h1></section>
+
+    <div class="cart-container">
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty. <a href="shop.html">Shop now</a></p>
+        </div>
+        <div class="cart-summary" id="cartSummary" style="display:none;">
+            <div class="summary-line"><span>Subtotal</span> <span id="subtotal">$0.00</span></div>
+            <div class="summary-line"><span>Shipping</span> <span>Free</span></div>
+            <div class="summary-line total"><span>Total</span> <span id="total">$0.00</span></div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <footer>© 2025 LEAL JEWELS NIGERIA. All rights reserved.</footer>
+
+    <script>
+        // LIVE BACKEND URL — THIS IS THE ONLY LINE YOU NEEDED TO ADD
+        const API_URL = 'https://leal-jewels-api.onrender.com/api';
+
+        function updateCart() {
+            const cart = JSON.parse(localLinkStorage.getItem('cart') || '[]');
+            const itemsDiv = document.getElementById('cartItems');
+            const summaryDiv = document.getElementById('cartSummary');
+            const countSpan = document.getElementById('cartCount');
+            countSpan.textContent = cart.reduce((s,i) => s + i.qty, 0);
+
+            if (cart.length === 0) {
+                itemsDiv.innerHTML = `<p class="empty-cart">Your cart is empty. <a href="shop.html">Shop now</a></p>`;
+                summaryDiv.style.display = 'none';
+                return;
+            }
+
+            itemsDiv.innerHTML = '';
+            let subtotal = 0;
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toFixed(2)} × ${item.qty}</div>
+                        <div class="quantity">
+                            <button onclick="updateQty(${item.id}, -1)">−</button>
+                            <span>${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
+                `;
+                itemsDiv.appendChild(div);
+            });
+
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${subtotal.toFixed(2)}`;
+            summaryDiv.style.display = 'block';
+        }
+
+        window.updateQty = (id, change) => {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty = Math.max(1, item.qty + change);
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
+        };
+
+        window.removeItem = (id) => {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        };
+
+        // REAL CHECKOUT — CONNECTED TO YOUR LIVE DATABASE
+        window.checkout = async () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please sign in to place your order');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const res = await fetch(API_URL + '/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        cartItems: cart,
+                        totalAmount: cart.reduce((sum, item) => sum + (item.price * item.qty), 0)
+                    })
+                });
+
+                if (res.ok) {
+                    localStorage.removeItem('cart');
+                    updateCart();
+                    alert('Order placed successfully! Thank you for shopping with LEAL JEWELS NIGERIA');
+                    window.location.href = 'index.html';
+                } else {
+                    const error = await res.json();
+                    alert(error.message || 'Order failed. Please try again.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('No internet connection. Please check and try again.');
+            }
+        };
+
+        // Hamburger menu toggle
+        document.getElementById('hamburger')?.addEventListener('click', () => {
+            document.getElementById('hamburger').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Load cart on page open
+        updateCart();
+    </script>
+</body>
+</html>

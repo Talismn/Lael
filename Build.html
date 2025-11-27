@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Build Your Bracelet | LEAL JEWELS NIGERIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --primary: #b76e79; --primary-dark: #a05260; --bg: #f8f6f3; --white: #ffffff;
+            --text: #222; --border: #e5e3df; --shadow: rgba(183,110,121,.08); --shadow-hover: rgba(183,110,121,.13);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { background:var(--bg); font-family:'Montserrat',sans-serif; color:var(--text); line-height:1.7; overflow-x:hidden; }
+
+        /* Header + Hamburger (Same as index & about) */
+        .main-header {
+            background:var(--white); display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 4vw; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000;
+        }
+        .logo { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; letter-spacing:1px; color:var(--text); }
+        .nav-links { display:flex; gap:4rem; align-items:center; }
+        .nav-link { color:var(--text); text-decoration:none; font-weight:500; transition:.2s; font-size:1rem; }
+        .nav-link:hover { color:var(--primary); }
+        .hamburger { display:none; flex-direction:column; cursor:pointer; gap:5px; }
+        .hamburger span { width:28px; height:3px; background:#222; transition:.3s; }
+
+        /* Hero */
+        .hero {
+            height:320px; background:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.15)),
+            url('https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?auto=format&fit=crop&w=1350&q=80') center/cover;
+            display:flex; align-items:flex-end; justify-content:center;
+        }
+        .hero h1 {
+            background:rgba(255,255,255,.9); padding:1.8rem 3rem; border-radius:18px 18px 0 0;
+            font-family:'Playfair Display',serif; font-size:2.4rem; box-shadow:0 4px 24px var(--shadow); text-align:center;
+        }
+
+        /* Builder */
+        .builder {
+            max-width:1200px; margin:3rem auto; padding:0 2vw; display:grid; gap:3rem;
+            grid-template-columns:1fr 1fr;
+        }
+        .bead-palette, .preview {
+            background:var(--white); padding:2rem; border-radius:18px;
+            box-shadow:0 4px 24px var(--shadow); border:1.5px solid var(--border);
+        }
+        .palette-title {
+            font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--primary); margin-bottom:1.5rem; text-align:center;
+        }
+        .beads {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:1.2rem;
+        }
+        .bead {
+            aspect-ratio:1; border-radius:50%; cursor:pointer; transition:.3s;
+            box-shadow:0 4px 12px rgba(0,0,0,.15); position:relative; overflow:hidden;
+        }
+        .bead:hover { transform:scale(1.12); box-shadow:0 8px 24px rgba(183,110,121,.25); }
+        .bead img { width:100%; height:100%; object-fit:cover; }
+        .bead::after {
+            content:attr(data-price); position:absolute; bottom:6px; left:50%; transform:translateX(-50%);
+            background:rgba(0,0,0,.7); color:#fff; font-size:11px; padding:4px 8px; border-radius:6px; white-space:nowrap;
+        }
+
+        .bracelet {
+            height:160px; background:linear-gradient(90deg,#f5f5f5 0%,#e0e0e0 100%);
+            border-radius:80px; margin:2rem 0; position:relative; overflow:hidden;
+            display:flex; align-items:center; justify-content:center; gap:10px; padding:0 40px;
+            box-shadow:inset 0 4px 12px rgba(0,0,0,.1);
+        }
+        .bracelet::before, .bracelet::after {
+            content:''; width:24px; height:24px; background:#999; border-radius:50%; position:absolute;
+        }
+        .bracelet::before { left:12px; } .bracelet::after { right:12px; }
+        .selected-bead {
+            width:56px; height:56px; border-radius:50%; box-shadow:0 6px 16px rgba(0,0,0,.3);
+            cursor:grab; transition:.2s; background-size:cover; background-position:center;
+        }
+        .selected-bead:active { cursor:grabbing; transform:scale(1.1); }
+
+        .options {
+            display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1.5rem;
+        }
+        .option-group label { font-weight:600; display:block; margin-bottom:0.6rem; font-size:0.95rem; }
+        select {
+            width:100%; padding:0.8rem; border:1px solid var(--border); border-radius:10px;
+            background:var(--bg); font-family:inherit; font-size:1rem;
+        }
+
+        .summary { margin-top:2rem; text-align:center; }
+        .total { font-size:1.6rem; font-weight:700; color:var(--primary); }
+        .btn-group { display:flex; gap:1rem; margin-top:1.5rem; }
+        .btn {
+            flex:1; padding:1rem; border-radius:10px; font-weight:600; cursor:pointer;
+            box-shadow:0 4px 12px var(--shadow); transition:.3s; border:none; font-size:1rem;
+        }
+        .save-btn { background:#27ae60; color:white; }
+        .share-btn { background:#3498db; color:white; }
+        .checkout-btn { background:var(--primary); color:white; }
+        .btn:hover { transform:scale(1.07); box-shadow:0 8px 20px var(--shadow-hover); }
+
+        .saved-designs {
+            margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);
+        }
+        .saved-item {
+            display:flex; justify-content:space-between; align-items:center; padding:1rem;
+            background:#fdfdfd; border-radius:10px; margin-bottom:0.8rem; font-size:0.95rem;
+            box-shadow:0 2px 8px rgba(0,0,0,.05);
+        }
+        .load-btn { background:var(--primary); color:white; border:none; padding:0.5rem 1rem;
+            border-radius:8px; cursor:pointer; font-size:0.9rem; }
+
+        footer {
+            background:var(--white); text-align:center; padding:2.5rem; border-top:1px solid var(--border);
+            color:#666; font-size:0.9rem; margin-top:5rem;
+        }
+
+        /* ——— LUXURY MOBILE RESPONSIVE (Darry Ring Style) ——— */
+        @media (max-width: 1024px) {
+            .nav-links { gap: 2.5rem; }
+            .hero h1 { font-size: 2rem; padding: 1.5rem 2.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; background: var(--white);
+                flex-direction: column; gap: 0; padding: 1rem 4vw; border-bottom: 1px solid var(--border);
+                display: none;
+            }
+            .nav-links.active { display: flex; }
+            .nav-link { padding: 1rem 0; font-size: 1.1rem; border-bottom: 1px solid #f0f0f0; }
+            .logo { font-size: 1.8rem; }
+
+            .hero { height: 50vh; min-height: 280px; }
+            .hero h1 { font-size: 1.8rem; padding: 1.5rem 2rem; }
+
+            .builder { grid-template-columns: 1fr; gap: 2.5rem; }
+            .beads { grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+            .bracelet { height: 140px; padding: 0 30px; }
+            .selected-bead { width: 48px; height: 48px; }
+            .options { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            .logo { font-size: 1.5rem; }
+            .hero { height: 40vh; min-height: 240px; }
+            .hero h1 { font-size: 1.5rem; padding: 1.2rem 1.8rem; }
+            .beads { grid-template-columns: repeat(4, 1fr); }
+            .bracelet { height: 110px; padding: 0 20px; }
+            .selected-bead { width: 40px; height: 40px; }
+            .palette-title { font-size: 1.6rem; }
+            .total { font-size: 1.5rem; }
+            .btn { padding: 1.1rem; font-size: 1.05rem; }
+        }
+
+        /* Hamburger Animation */
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-6px, 7px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-6px, -7px); }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">LEAL JEWELS NIGERIA</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="shop.html" class="nav-link">Shop</a>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="Contact.html" class="nav-link">Contact</a>
+            <a href="cart.html" class="nav-link cart-icon">
+            </a>
+            <button class="btn checkout-btn" style="padding:0.8rem 1.5rem;font-size:0.95rem;" onclick="addCustomToCart()">Add to Cart</button>
+        </nav>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Design Your Custom Bracelet</h1>
+    </section>
+
+    <section class="builder">
+        <div class="bead-palette">
+            <h2 class="palette-title">Choose Your Beads</h2>
+            <div class="beads" id="beadPalette"></div>
+        </div>
+
+        <div class="preview">
+            <h2 class="palette-title">Your Masterpiece</h2>
+            <div class="bracelet" id="bracelet"></div>
+
+            <div class="options">
+                <div class="option-group">
+                    <label>Bracelet Length</label>
+                    <select id="length"><option value="6">6 inches</option><option value="7" selected>7 inches</option><option value="8">8 inches</option></select>
+                </div>
+                <div class="option-group">
+                    <label>Metal Type</label>
+                    <select id="metal">
+                        <option value="silver" data-price="0">Silver</option>
+                        <option value="gold" data-price="50">Gold (+$50)</option>
+                        <option value="rosegold" data-price="60">Rose Gold (+$60)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="summary">
+                <p>Total Beads: <span id="count">0</span></p>
+                <p class="total">$<span id="total">0</span></p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn save-btn" onclick="saveDesign()">Save Design</button>
+                <button class="btn share-btn" onclick="shareDesign()">Share Link</button>
+                <button class="btn checkout-btn" onclick="checkout()">Checkout Now</button>
+            </div>
+
+            <div class="saved-designs" id="savedDesigns">
+                <p><strong>Your Saved Designs</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <footer>© 2025 LEAL JEWELS NIGERIA. All rights reserved.</footer>
+
+    <script>
+        // [All your original JavaScript is 100% unchanged — only moved to bottom]
+        const stripe = Stripe('pk_test_51...'); // Replace with your key
+        const beads = [ /* your full beads array — unchanged */ 
+            {id:1, color:'#d4af37', img:'https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?w=200', price:15, name:'Gold Spacer'},
+            {id:2, color:'#b76e79', img:'https://images.unsplash.com/photo-1611590027211-b954fd027b51?w=200', price:25, name:'Rose Quartz'},
+            {id:3, color:'#4a90e2', img:'https://images.unsplash.com/photo-1631055373751-1ad9a1c2c765?w=200', price:30, name:'Sapphire'},
+            {id:4, color:'#50c878', img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200', price:20, name:'Emerald'},
+            {id:5, color:'#ff6b6b', img:'https://images.unsplash.com/photo-1571771019784-3ff35f4f1ab8?w=200', price:35, name:'Ruby Charm'},
+            {id:6, color:'#9b59b6', img:'https://images.unsplash.com/photo-1608042314453-ae19580b99ad?w=200', price:28, name:'Amethyst'},
+            {id:7, color:'#f1c40f', img:'https://images.unsplash.com/photo-1519389950470-47ba2b9d8e1d?w=200', price:18, name:'Citrine'},
+            {id:8, color:'#e74c3c', img:'https://images.unsplash.com/photo-1581092580496-e0d23cbdf1dc?w=200', price:40, name:'Heart Charm'},
+            {id:9, color:'#34495e', img:'https://images.unsplash.com/photo-1519389950470-47ba2b9d8e1d?w=200', price:22, name:'Onyx'},
+            {id:10,color:'#1abc9c', img:'https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?w=200', price:27, name:'Turquoise'},
+            {id:11,color:'#d35400', img:'https://images.unsplash.com/photo-1611590027211-b954fd027b51?w=200', price:32, name:'Carnelian'},
+            {id:12,color:'#8e44ad', img:'https://images.unsplash.com/photo-1631055373751-1ad9a1c2c765?w=200', price:38, name:'Star Charm'},
+            {id:13,color:'#2ecc71', img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200', price:19, name:'Peridot'},
+            {id:14,color:'#e67e22', img:'https://images.unsplash.com/photo-1571771019784-3ff35f4f1ab8?w=200', price:45, name:'Evil Eye'},
+            {id:15,color:'#95a5a6', img:'https://images.unsplash.com/photo-1608042314453-ae19580b99ad?w=200', price:12, name:'Silver Spacer'}
+        ];
+
+        let selected = [];
+        const palette = document.getElementById('beadPalette');
+        const bracelet = document.getElementById('bracelet');
+
+        beads.forEach(b => {
+            const div = document.createElement('div');
+            div.className = 'bead';
+            div.dataset.id = b.id;
+            div.dataset.price = '$' + b.price;
+            div.innerHTML = `<img src="${b.img}" alt="${b.name}">`;
+            div.onclick = () => addBead(b);
+            palette.appendChild(div);
+        });
+
+        function addBead(bead) { selected.push(bead); render(); }
+
+        function render() {
+            bracelet.innerHTML = selected.map((b,i) => `
+                <div class="selected-bead" data-index="${i}" draggable="true"
+                     style="background-image:url(${b.img});">
+                </div>
+            `).join('');
+            updateSummary();
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            bracelet.querySelectorAll('.selected-bead').forEach(el => {
+                el.ondragstart = e => e.dataTransfer.setData('text', el.dataset.index);
+                el.ondragover = e => e.preventDefault();
+                el.ondrop = e => {
+                    e.preventDefault();
+                    const from = e.dataTransfer.getData('text');
+                    const to = el.dataset.index;
+                    [selected[from], selected[to]] = [selected[to], selected[from]];
+                    render();
+                };
+                el.onclick = () => { selected.splice(el.dataset.index, 1); render(); };
+            });
+        }
+
+        function updateSummary() {
+            const beadTotal = selected.reduce((s,b) => s + b.price, 0);
+            const metalPrice = parseInt(document.getElementById('metal').selectedOptions[0].dataset.price || 0);
+            const total = beadTotal + metalPrice;
+            document.getElementById('count').textContent = selected.length;
+            document.getElementById('total').textContent = total;
+        }
+
+        document.getElementById('length').onchange = updateSummary;
+        document.getElementById('metal').onchange = updateSummary;
+
+        function saveDesign() {
+            const design = { beads: selected.map(b => b.id), length: document.getElementById('length').value, metal: document.getElementById('metal').value, total: document.getElementById('total').textContent, timestamp: Date.now() };
+            const saves = JSON.parse(localStorage.getItem('braceletDesigns') || '[]');
+            saves.push(design);
+            localStorage.setItem('braceletDesigns', JSON.stringify(saves));
+            alert('Design saved!');
+            loadSavedDesigns();
+        }
+
+        function shareDesign() {
+            const design = { beads: selected.map(b => b.id), length: document.getElementById('length').value, metal: document.getElementById('metal').value };
+            const params = new URLSearchParams(design).toString();
+            const url = `${location.origin}${location.pathname}?${params}`;
+            navigator.clipboard.writeText(url).then(() => alert('Link copied to clipboard!'));
+        }
+
+        function loadFromURL() {
+            const params = new URLSearchParams(location.search);
+            if (params.has('beads')) {
+                const beadIds = params.get('beads').split(',').map(Number);
+                selected = beads.filter(b => beadIds.includes(b.id));
+                document.getElementById('length').value = params.get('length') || '7';
+                document.getElementById('metal').value = params.get('metal') || 'silver';
+                render();
+            }
+        }
+
+        function loadSavedDesigns() {
+            const saves = JSON.parse(localStorage.getItem('braceletDesigns') || '[]');
+            const container = document.getElementById('savedDesigns');
+            container.innerHTML = '<p><strong>Your Saved Designs</strong></p>';
+            saves.slice(-5).reverse().forEach((d, i) => {
+                const div = document.createElement('div');
+                div.className = 'saved-item';
+                div.innerHTML = `<span>${d.beads.length} beads • ${d.length}" • ${d.metal} • $${d.total}</span>
+                    <button class="load-btn" onclick="loadDesign(${saves.length - 1 - i})">Load</button>`;
+                container.appendChild(div);
+            });
+        }
+
+        window.loadDesign = function(index) {
+            const saves = JSON.parse(localStorage.getItem('braceletDesigns') || '[]');
+            const d = saves[index];
+            selected = beads.filter(b => d.beads.includes(b.id));
+            document.getElementById('length').value = d.length;
+            document.getElementById('metal').value = d.metal;
+            render();
+        };
+
+        async function checkout() {
+            if (selected.length === 0) return alert('Please add at least one bead!');
+            // Your Stripe logic here
+            alert('Checkout coming soon!');
+        }
+
+        function addCustomToCart() {
+            const total = document.getElementById('total').textContent;
+            if (selected.length === 0) return alert('Add beads first!');
+            const customItem = {
+                id: Date.now(), name: `Custom Bracelet (${selected.length} beads)`, price: parseFloat(total), qty: 1,
+                img: 'https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?w=600', category: 'bracelet', custom: true
+            };
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push(customItem);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Custom bracelet added to cart!');
+        }
+
+        // Hamburger Menu
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('hamburger').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('hamburger').classList.remove('active');
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // Init
+        loadFromURL();
+        loadSavedDesigns();
+        render();
+    </script>
+</body>
+</html>

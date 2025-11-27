@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us | LEAL JEWELS NIGERIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #b76e79;
+            --primary-dark: #a05260;
+            --bg: #f8f6f3;
+            --white: #ffffff;
+            --text: #222222;
+            --border: #e5e3df;
+            --shadow: rgba(183, 110, 121, 0.08);
+            --shadow-hover: rgba(183, 110, 121, 0.13);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: var(--bg);
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Header + Hamburger (Same as index.html) */
+        .main-header {
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 4vw;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6rem;
+            margin-left: 4rem;
+        }
+        .nav-link {
+            font-size: 1rem;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 1px;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem 0;
+        }
+        .nav-link:hover { color: var(--primary); }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #222;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Subheader Profile */
+        .subheader-profile {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 0.7rem 4vw;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .profile-link {
+            display: flex;
+            align-items: center;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .profile-link:hover { color: var(--primary); }
+        .profile-link svg { width: 24px; height: 24px; margin-right: 0.7rem; }
+
+        /* Hero */
+        .about-hero {
+            width: 100%;
+            height: 420px;
+            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), 
+                        url('https://images.unsplash.com/photo-1571771019784-3ff35f4f1ab8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .hero-text {
+            background: rgba(255,255,255,0.88);
+            padding: 2rem 3rem;
+            border-radius: 18px 18px 0 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text);
+            box-shadow: 0 4px 24px var(--shadow);
+        }
+
+        /* Content */
+        .about-content {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2vw;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+        .story-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .story-text p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .story-img {
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px var(--shadow);
+        }
+        .story-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        .value-card {
+            background: var(--white);
+            padding: 2rem 1.5rem;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 4px 24px var(--shadow);
+            border: 1.5px solid var(--border);
+            transition: all 0.2s;
+        }
+        .value-card:hover {
+            box-shadow: 0 8px 32px var(--shadow-hover);
+            transform: translateY(-8px) scale(1.03);
+        }
+        .value-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+        }
+        .value-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+
+        .cta-section { text-align: center; margin: 4rem 0; }
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff8f0;
+            padding: 0.9rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            min-height: 48px;
+        }
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.08);
+            box-shadow: 0 4px 16px var(--shadow-hover);
+        }
+
+        .footer {
+            background: var(--white);
+            text-align: center;
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--border);
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .social-links a {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0 12px;
+            transition: color 0.2s;
+        }
+        .social-links a:hover { color: var(--primary-dark); }
+
+        /* ——— DARRY RING-STYLE MOBILE SCALING ——— */
+        @media (max-width: 1024px) {
+            .nav-links { gap: 3rem; }
+            .story-grid { gap: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: absolute;
+                top: 100%; left: 0; width: 100%;
+                background: var(--white);
+                flex-direction: column;
+                gap: 0; padding: 1rem 4vw;
+                border-bottom: 1px solid var(--border);
+                display: none;
+            }
+            .nav-links.active { display: flex; }
+            .nav-link { padding: 0.9rem 0; font-size: 1.1rem; border-bottom: 1px solid #f0f0f0; }
+            .logo { font-size: 1.8rem; }
+
+            .about-hero { height: 50vh; min-height: 300px; }
+            .hero-text { font-size: 1.6rem; padding: 1.5rem 2rem; max-width: 90%; text-align: center; }
+
+            .story-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 1.8rem; text-align: center; }
+            .story-text h3 { font-size: 1.6rem; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .logo { font-size: 1.5rem; }
+            .about-hero { height: 40vh; min-height: 250px; }
+            .hero-text { font-size: 1.4rem; padding: 1rem 1.5rem; }
+            .section-title { font-size: 1.6rem; }
+            .story-text h3 { font-size: 1.4rem; }
+            .value-card { padding: 1.5rem 1rem; }
+            .btn { width: 100%; max-width: 300px; padding: 1rem; font-size: 1.1rem; }
+        }
+
+        /* Hamburger Animation */
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Hamburger -->
+    <header class="main-header">
+        <div class="logo">LEAL JEWELS NIGERIA</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html" class="nav-link">Shop</a>
+            <a href="#" class="nav-link">Collections</a>
+            <a href="Build.html" class="nav-link">Build Your Bracelet</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="Contact.html" class="nav-link">Contact</a>
+            <a href="cart.html" class="nav-link cart-icon">
+                Cart <span class="cart-count" id="cartCount"></span>
+            </a>
+        </nav>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- Subheader Profile -->
+    <div class="subheader-profile">
+        <a href="#" class="profile-link" id="openProfile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#b76e79" stroke-width="1.5">
+                <circle cx="12" cy="8" r="4.5"/>
+                <path d="M4.5 20c0-3.5 3.5-5.5 7.5-5.5s7.5 2 7.5 5.5"/>
+            </svg>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Hero -->
+    <section class="about-hero">
+        <div class="hero-text">Our Story, Your Legacy</div>
+    </section>
+
+    <!-- Content -->
+    <section class="about-content">
+        <h2 class="section-title">Crafted with Passion Since 2018</h2>
+
+        <div class="story-grid">
+            <div class="story-text">
+                <h3>Where Art Meets Heart</h3>
+                <p>Founded in 2018 by master jeweler Elena Craft, <strong>LEAL JEWELS NIGERIA</strong> was born from a simple belief: every piece of jewelry should tell a story.</p>
+                <p>From engagement rings that mark forever to heirloom necklaces passed down generations, we combine traditional craftsmanship with modern innovation to bring your vision to life.</p>
+                <p>Our atelier in the heart of the city is where dreams are sketched, gems are chosen, and love is forged in gold.</p>
+            </div>
+            <div class="story-img">
+                <img src="https://images.unsplash.com/photo-1581092580496-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jeweler at work">
+            </div>
+        </div>
+
+        <h2 class="section-title">Our Values</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <i class="fas fa-gem"></i>
+                <h3>Ethical Sourcing</h3>
+                <p>Every diamond and gem is conflict-free and responsibly sourced.</p>
+            </div>
+            <div class="value-card">
+                <i class="fas fa-hands-helping"></i>
+                <h3>Master Craftsmanship</h3>
+                <p>Handmade by artisans with over 20 years of experience.</p>
+            </div>
+            <div class="value-card">
+                <i class="fas fa-heart"></i>
+                <h3>Personalized Care</h3>
+                <p>One-on-one design consultations for your perfect piece.</p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <a href="Build.html" class="btn">Start Your Custom Journey</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 LEAL JEWELS NIGERIA. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+    </footer>
+
+    <!-- JavaScript: Hamburger + Profile Modal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Hamburger Menu
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Profile Link (simple alert for now – you can reuse full modal from index.html later)
+            document.getElementById('openProfile').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Profile feature coming soon!');
+            });
+        });
+    </script>
+</body>
+</html>

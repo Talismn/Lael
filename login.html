@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In | LEAL JEWELS NIGERIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <style>
+        :root {
+            --primary: #b76e79; --primary-dark: #a05260; --bg: #f8f6f3; --white: #ffffff;
+            --text: #222222; --border: #e5e3df; --shadow: rgba(183, 110, 121, 0.08); --shadow-hover: rgba(183, 110, 121, 0.13);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { background:var(--bg); font-family:'Montserrat',sans-serif; color:var(--text); line-height:1.7; min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden; }
+
+        /* Header + Hamburger */
+        .main-header {
+            background:var(--white); display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 4vw; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000;
+        }
+        .logo { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; letter-spacing:1px; color:var(--text); }
+        .nav-links { display:flex; gap:6rem; align-items:center; margin-left:4rem; }
+        .nav-link { font-size:1rem; color:var(--text); text-decoration:none; font-weight:500; transition:.2s; padding:0.5rem 0; }
+        .nav-link:hover { color:var(--primary); }
+        .hamburger { display:none; flex-direction:column; cursor:pointer; gap:5px; }
+        .hamburger span { width:28px; height:3px; background:#222; transition:.3s; }
+
+        .auth-hero {
+            width:100%; height:300px; background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)),
+            url('https://images.unsplash.com/photo-1605100804764-7a69c8ade49c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover;
+            display:flex; align-items:flex-end; justify-content:center;
+        }
+        .hero-text {
+            background:rgba(255,255,255,0.88); padding:2rem 3rem; border-radius:18px 18px 0 0;
+            font-family:'Playfair Display',serif; font-size:2rem; color:var(--text); box-shadow:0 4px 24px var(--shadow);
+        }
+
+        .auth-container { max-width:500px; margin:3rem auto; padding:0 2vw; flex:1; }
+        .auth-card { background:var(--white); padding:2.5rem; border-radius:18px; box-shadow:0 4px 24px var(--shadow); border:1.5px solid var(--border); }
+        .auth-title { font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--primary); text-align:center; margin-bottom:1.5rem; }
+        .form-group { margin-bottom:1.2rem; }
+        .form-group label { display:block; margin-bottom:0.5rem; font-weight:500; font-size:0.95rem; }
+        .form-group input { width:100%; padding:0.7rem; border:1px solid var(--border); border-radius:8px; background:var(--bg); font-size:1rem; font-family:inherit; }
+        .btn { width:100%; background:var(--primary); color:#fff8f0; padding:0.8rem; border-radius:8px; font-weight:500; font-size:1rem; cursor:pointer; border:none; margin-top:1rem; box-shadow:0 2px 8px var(--shadow); transition:.2s; }
+        .btn:hover { background:var(--primary-dark); transform:scale(1.03); box-shadow:0 4px 16px var(--shadow-hover); }
+
+        .social-login { margin:1.5rem 0; display:flex; flex-direction:column; gap:0.8rem; }
+        .social-btn { display:flex; align-items:center; justify-content:center; padding:0.7rem; border-radius:8px; font-weight:500; font-size:1rem; cursor:pointer; transition:.2s; border:1px solid var(--border); min-height:48px; }
+        .google-btn { background:#fff; color:#333; }
+        .google-btn:hover { background:#f8f8f8; }
+        .fb-btn { background:#1877f2; color:white; }
+        .fb-btn:hover { background:#166fe5; }
+        .social-btn i { margin-right:0.5rem; font-size:1.2rem; }
+
+        .auth-footer { text-align:center; margin-top:1.5rem; font-size:0.9rem; }
+        .auth-footer a { color:var(--primary); text-decoration:none; font-weight:500; }
+        .auth-footer a:hover { text-decoration:underline; }
+
+        .footer { background:var(--white); text-align:center; padding:2rem 0; border-top:1px solid var(--border); color:#666; font-size:0.9rem; margin-top:auto; }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .nav-links { gap:3rem; }
+            .hero-text { font-size:1.8rem; padding:1.8rem 2.5rem; }
+        }
+        @media (max-width: 768px) {
+            .hamburger { display:flex; }
+            .nav-links { position:absolute; top:100%; left:0; width:100%; background:var(--white); flex-direction:column; gap:0; padding:1rem 4vw; border-bottom:1px solid var(--border); display:none; }
+            .nav-links.active { display:flex; }
+            .nav-link { padding:1rem 0; font-size:1.1rem; border-bottom:1px solid #f0f0f0; }
+            .logo { font-size:1.8rem; }
+
+            .auth-hero { height:50vh; min-height:300px; }
+            .hero-text { font-size:1.6rem; padding:1.5rem 2rem; }
+        }
+        @media (max-width: 480px) {
+            .logo { font-size:1.5rem; }
+            .auth-hero { height:40vh; min-height:250px; }
+            .hero-text { font-size:1.4rem; padding:1.2rem 1.8rem; }
+            .auth-title { font-size:1.6rem; }
+            .btn, .social-btn { padding:1rem; font-size:1.1rem; }
+        }
+        .hamburger.active span:nth-child(1) { transform:rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity:0; }
+        .hamburger.active span:nth-child(3) { transform:rotate(45deg) translate(-5px, -6px); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">LEAL JEWELS NIGERIA</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html" class="nav-link">Shop</a>
+            <a href="#" class="nav-link">Collections</a>
+            <a href="Build.html" class="nav-link">Build Your Bracelet</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="Contact.html" class="nav-link">Contact</a>
+            <a href="cart.html" class="nav-link cart-icon">Cart <span class="cart-count" id="cartCount"></span></a>
+        </nav>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </header>
+
+    <section class="auth-hero">
+        <div class="hero-text">Welcome Back</div>
+    </section>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2 class="auth-title">Sign In</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn">Sign In</button>
+            </form>
+
+            <div class="social-login">
+                <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                <button class="social-btn fb-btn" onclick="fbLogin()">
+                    <i class="fab fa-facebook-f"></i> Continue with Facebook
+                </button>
+            </div>
+
+            <p class="auth-footer">
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 LEAL JEWELS NIGERIA. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('hamburger').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Demo Login → Redirect to index.html
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (email && password) {
+                localStorage.setItem('user', JSON.stringify({ name: email.split('@')[0], loggedIn: true }));
+                alert('Welcome back!');
+                window.location.href = 'index.html';
+            }
+        };
+
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : 'YOUR_FB_APP_ID',
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v18.0'
+            });
+        };
+
+        function fbLogin() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me', { fields: 'name,email' }, function(user) {
+                        localStorage.setItem('user', JSON.stringify({ name: user.name, loggedIn: true }));
+                        alert(`Welcome, ${user.name}!`);
+                        window.location.href = 'index.html';
+                    });
+                }
+            }, { scope: 'email' });
+        }
+
+        function handleCredentialResponse(response) {
+            const profile = JSON.parse(atob(response.credential.split('.')[1]));
+            localStorage.setItem('user', JSON.stringify({ name: profile.name, loggedIn: true }));
+            alert(`Welcome, ${profile.name}!`);
+            window.location.href = 'index.html';
+        }
+
+        window.onload = () => {
+            google.accounts.id.initialize({
+                client_id: 'YOUR_GOOGLE_CLIENT_ID',
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.querySelector('.g_id_signin'),
+                { theme: "outline", size: "large" }
+            );
+        };
+    </script>
+</body>
+</html>
